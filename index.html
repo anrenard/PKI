@@ -19,6 +19,7 @@
         <script type="text/javascript" src="phonegap.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
+        $(function (){
             $("a").click(function() {
                 var url = $(this).attr('href');
                 $('#fr-1').fadeOut(1500,function(){
@@ -27,6 +28,7 @@
 
             return false;
             });
+        });
         </script>
     </body>
 </html>

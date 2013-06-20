@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<title>Mon P'ti Vignoble - Bétâ v.01</title>
+		<meta name="description" content=" " />
+		<meta name="keywords" content=" " />
+		<meta name="author" content=" " />
+		<link rel="shortcut icon" href="../favicon.ico"> 
+		<link rel="stylesheet" type="text/css" href="css/default.css" />
+		<link rel="stylesheet" type="text/css" href="css/component.css" />
+		<script src="js/modernizr.custom.js"></script>
+		<script type="text/javascript">
+			var cSpeed=9;
+			var cWidth=30;
+			var cHeight=30;
+			var cTotalFrames=24;
+			var cFrameWidth=30;
+			var cImageSrc='images/sprites.gif';
+			
+			var cImageTimeout=false;
+			var cIndex=0;
+			var cXpos=0;
+			var cPreloaderTimeout=false;
+			var SECONDS_BETWEEN_FRAMES=0;
+			
+			function startAnimation(){
+				
+				document.getElementById('loaderImage').style.backgroundImage='url('+cImageSrc+')';
+				document.getElementById('loaderImage').style.width=cWidth+'px';
+				document.getElementById('loaderImage').style.height=cHeight+'px';
+				
+				//FPS = Math.round(100/(maxSpeed+2-speed));
+				FPS = Math.round(100/cSpeed);
+				SECONDS_BETWEEN_FRAMES = 1 / FPS;
+				
+				cPreloaderTimeout=setTimeout('continueAnimation()', SECONDS_BETWEEN_FRAMES/1000);
+				
+			}
+			
+			function continueAnimation(){
+				
+				cXpos += cFrameWidth;
+				//increase the index so we know which frame of our animation we are currently on
+				cIndex += 1;
+				 
+				//if our cIndex is higher than our total number of frames, we're at the end and should restart
+				if (cIndex >= cTotalFrames) {
+					cXpos =0;
+					cIndex=0;
+				}
+				
+				if(document.getElementById('loaderImage'))
+					document.getElementById('loaderImage').style.backgroundPosition=(-cXpos)+'px 0';
+				
+				cPreloaderTimeout=setTimeout('continueAnimation()', SECONDS_BETWEEN_FRAMES*1000);
+			}
+			
+			function stopAnimation(){//stops animation
+				clearTimeout(cPreloaderTimeout);
+				cPreloaderTimeout=false;
+			}
+			
+			function imageLoader(s, fun)//Pre-loads the sprites image
+			{
+				clearTimeout(cImageTimeout);
+				cImageTimeout=0;
+				genImage = new Image();
+				genImage.onload=function (){cImageTimeout=setTimeout(fun, 0)};
+				genImage.onerror=new Function('alert(\'Could not load the image\')');
+				genImage.src=s;
+			}
+			
+			//The following code starts the animation
+			new imageLoader(cImageSrc, 'startAnimation()');
+		</script>
+	</head>
+	<body>
+		<div class="container color">
+			<div class="main clearfix">
+				<div class="column">
+					<div id="dl-menu" class="dl-menuwrapper">
+						<div id="titlevin"></div>
+						<button class="dl-trigger">Open Menu</button>
+
+						<ul class="dl-menu" >
+							<li data-animation="1"><a href="#">Wall</a></li>
+							<li>
+								<a href="#">Profil</a>
+								<ul class="dl-submenu">
+									<li class="id">Anthony RENARD</a></li>
+									<li><a href="#">Paramètres</a></li>
+								</ul>
+							</li>
+							<li><a href="#">Ma cave</a></li>
+							<li><a href="#">Scanner une bouteille</a></li>
+							<li><a href="#">Web to store</a></li>
+						</ul>
+					</div><!-- /dl-menuwrapper -->
+				</div>
+			</div>
+			<div class="content">
+
+				<div id="output">
+					<div id="loaderImage"></div>
+				</div>
+
+			</div>
+		</div><!-- /container -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="js/jquery.dlmenu.js"></script>
+		<script>
+			$(function() {
+				$( '#dl-menu' ).dlmenu();
+			});
+		</script>
+		
+		<script id="source" language="javascript" type="text/javascript">
+
+		  $(function () 
+		  {
+		
+		    //-------------------------------------------------------------------------------------------
+		    // 2) Send a http request with AJAX http://api.jquery.com/jQuery.ajax/
+		    //-------------------------------------------------------------------------------------------
+		    $.ajax({                                      
+		      url: 'http://c2ol.fr/projets/C2OLX006/check.php',                  //the script to call to get data          
+		      data: "",                        //you can insert url argumnets here to pass to api.php for example "id=5&parent=6"
+		      dataType: 'json',                //data format      
+		      success: function(data)          //on recieve of reply
+		      {
+		           console.log(data);
+		           var id = data.erreur;
+		        //--------------------------------------------------------------------------------------
+		        // 3) Update html content
+		        //--------------------------------------------------------------------------------------
+		        $('#titlevin').html('<h3>Bonjour '+id+'</h3>');
+		        
+		        
+		       	
+		        //Set output element html
+		        //recommend reading up on jquery selectors they are awesome http://api.jquery.com/category/selectors/
+		      } 
+		    });
+		  
+		  }); 
+		  </script>
+		
+		<script id="source" language="javascript" type="text/javascript">
+
+		  $(function () 
+		  {
+		
+		    //-------------------------------------------------------------------------------------------
+		    // 2) Send a http request with AJAX http://api.jquery.com/jQuery.ajax/
+		    //-------------------------------------------------------------------------------------------
+		    $.ajax({                                      
+		      url: 'http://c2ol.fr/projets/C2OLX006/server/webserv_basevin.php',                  //the script to call to get data          
+		      data: "",                        //you can insert url argumnets here to pass to api.php for example "id=5&parent=6"
+		      dataType: 'json',                //data format      
+		      success: function(data)          //on recieve of reply
+		      {
+		           console.log(data);
+		           var id;
+		           var nom;
+		           var re ='';
+		        //--------------------------------------------------------------------------------------
+		        // 3) Update html content
+		        //--------------------------------------------------------------------------------------
+		        for (var i=0;i<data.length;i++){
+		           id = data[i].id;
+		           nom = data[i].nom;
+		           console.log(id);
+		           re+= "<div class='tt'><b>id: </b>"+id+"<b> name: </b>"+nom+"<br/></div>";
+		        }
+		        $('#output').html(re);
+		        
+		        
+		       	
+		        //Set output element html
+		        //recommend reading up on jquery selectors they are awesome http://api.jquery.com/category/selectors/
+		      } 
+		    });
+		  
+		  }); 
+		  </script>
+	</body>
+</html>
